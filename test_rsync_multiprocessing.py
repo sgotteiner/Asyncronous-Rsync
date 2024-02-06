@@ -1,3 +1,7 @@
+"""
+This is a test for the sender_multiprocessing program.
+"""
+
 import unittest
 import os
 import shutil
@@ -11,6 +15,10 @@ FILE_10MB = 'file_10mb.txt'
 FILE_10MB_SIZE = 10 * 1024 * 1024
 
 class CustomTextTestResult(unittest.TextTestResult):
+    """
+    A helper class for nicer test output.
+    """
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.asserts_passed = 0
@@ -31,9 +39,21 @@ class CustomTextTestResult(unittest.TextTestResult):
         self.asserts_failed = 0
 
 class CustomTextTestRunner(unittest.TextTestRunner):
+    """
+    A helper class to run the class that makes a nice output.
+    """
+    
     resultclass = CustomTextTestResult
 
 class TestFileTransfer(unittest.TestCase):
+    """
+    The test has a couple of steps:
+    1. Creates temporary source and destination directories. Inside the source directory it creates two files of 5mb and 10mb.
+    2. Sends the files in parallel using sender_multiprocessing.
+    3. Checks if it was asynchronous and if the files arrived complete.
+    4. Deletes the temporary directories.
+    """
+    
     @classmethod
     def setUpClass(cls):
         # Create temporary folders for source and destination

@@ -1,10 +1,22 @@
+"""
+This program gets multiple source files and sends them asynchronously using rsync to the destination at a given bandwidth limit.
+For each file it shows the progress and how long its transfer took. It also shows the total time and how much the parallelism saved.
+"""
+
 import sys
 import subprocess
 import multiprocessing
 import time
 
 def rsync_transfer(source_file, destination, bandwidth_limit):
+    """
+    Constructing and running rsync for a single file.
+    
+    return: the time it took to transfer the file.
+    """
+    
     start_time = time.time()
+    
 
     # Constructing the rsync command with options:
     # -a: archive mode (preserves permissions, ownership, timestamps, etc.)
@@ -31,7 +43,14 @@ def rsync_transfer(source_file, destination, bandwidth_limit):
     return elapsed_time
 
 def parallel_rsync_transfer(source_files, destination, bandwidth_limit):
+    """
+    Sending multiple files in parallel.
+    
+    return: the sequential time (the sum of the individual transfer times), and the parallel time.
+    """
+    
     start_time_parallel = time.time()
+    
     # Run file transfer in parallel using multiprocessing.Pool
     with multiprocessing.Pool() as pool:
         # Perform parallel transfers
@@ -47,6 +66,7 @@ def main():
         print("Usage: python script.py <source1> ... <destination> <bandwidth_limit>")
         sys.exit(1)
 
+    # Parsing the program aruments.
     source_files = sys.argv[1:-2]
     destination_path = sys.argv[-2]
     bandwidth_limit = sys.argv[-1]
